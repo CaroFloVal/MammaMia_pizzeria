@@ -1,8 +1,8 @@
 import React, {useState, useEffect } from 'react';
 import { Container, Row, Col } from 'react-bootstrap';
 import Button from 'react-bootstrap/Button';
-import Header from './Header';
-import CardPizza from './CardPizza';
+import Header from '../components/Header';
+import CardPizza from '../components/CardPizza';
 
 const Home = () => {
   const [pizzas, setPizzas] = useState([]); 
