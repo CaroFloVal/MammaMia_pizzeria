@@ -1,9 +1,11 @@
 import React, { useContext } from 'react';
 import { CartContext } from '../context/CartContext';
+import { UserContext } from '../context/UserContext';  
 import { Button, ListGroup } from 'react-bootstrap';
 
 const Cart = () => {
   const { cart, increaseQuantity, decreaseQuantity, total } = useContext(CartContext);
+  const { token } = useContext(UserContext);  
 
   return (
     <div>
@@ -22,6 +24,12 @@ const Cart = () => {
         ))}
       </ListGroup>
       <h3>Total: ${total}</h3>
+      <Button 
+        variant="primary" 
+        disabled={!token}  
+      >
+        Pagar
+      </Button>
     </div>
   );
 };
