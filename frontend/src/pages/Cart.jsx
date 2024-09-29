@@ -1,11 +1,36 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import { CartContext } from '../context/CartContext';
 import { UserContext } from '../context/UserContext';  
-import { Button, ListGroup } from 'react-bootstrap';
+import { Button, ListGroup, Alert } from 'react-bootstrap'; 
 
 const Cart = () => {
-  const { cart, increaseQuantity, decreaseQuantity, total } = useContext(CartContext);
+  const { cart, increaseQuantity, decreaseQuantity, total, clearCart } = useContext(CartContext); 
   const { token } = useContext(UserContext);  
+  const [message, setMessage] = useState(''); 
+
+  
+  const handleCheckout = async () => {
+    try {
+      const response = await fetch('http://localhost:5000/api/checkouts', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}` 
+        },
+        body: JSON.stringify({ cart }) 
+      });
+
+      if (!response.ok) {
+        throw new Error('Error en la compra');
+      }
+
+      
+      setMessage('¡Compra realizada con éxito!');
+      clearCart(); 
+    } catch (error) {
+      setMessage('Hubo un problema con la compra. Intenta de nuevo.');
+    }
+  };
 
   return (
     <div>
@@ -24,9 +49,14 @@ const Cart = () => {
         ))}
       </ListGroup>
       <h3>Total: ${total}</h3>
+      
+      {/* Mostrar el mensaje de éxito o error */}
+      {message && <Alert variant={message.includes('éxito') ? 'success' : 'danger'}>{message}</Alert>}
+
       <Button 
         variant="primary" 
-        disabled={!token}  
+        onClick={handleCheckout} 
+        disabled={!token || cart.length === 0}  
       >
         Pagar
       </Button>

@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom'; 
 import Container from 'react-bootstrap/Container';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
@@ -9,7 +9,13 @@ import { UserContext } from '../context/UserContext';
 
 const NavbarPizza = () => {
   const { total } = useContext(CartContext);
-  const { token, logout } = useContext(UserContext); 
+  const { token, logout } = useContext(UserContext);
+  const navigate = useNavigate(); 
+
+  const handleLogout = () => {
+    logout();  
+    navigate('/login'); 
+  };
 
   return (
     <Navbar style={{ width: '100%' }} className="barra d-flex" bg="dark" variant="dark">
@@ -20,7 +26,7 @@ const NavbarPizza = () => {
           {token ? (
             <>
               <Nav.Link as={Link} to="/profile">🔓 Profile</Nav.Link>
-              <Nav.Link as={Link} to="/login" onClick={logout}>🔒 Logout</Nav.Link>
+              <Nav.Link as={Link} to="/" onClick={handleLogout}>🔒 Logout</Nav.Link>  {}
             </>
           ) : (
             <>

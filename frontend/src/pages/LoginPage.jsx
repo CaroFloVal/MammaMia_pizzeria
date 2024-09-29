@@ -1,13 +1,17 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
+import { UserContext } from '../context/UserContext'; 
 
 const LoginPage = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [message, setMessage] = useState('');
 
-  const handleSubmit = (e) => {
+  const { login } = useContext(UserContext);  
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
+    
     if (!email || !password) {
       setMessage('Todos los campos son obligatorios');
       return;
@@ -18,7 +22,13 @@ const LoginPage = () => {
       return;
     }
 
-    setMessage('¡Inicio de sesión exitoso!');
+
+    try {
+      await login(email, password);  
+      setMessage('¡Inicio de sesión exitoso!');  
+    } catch (error) {
+      setMessage('Error al iniciar sesión. Verifica tus credenciales.');
+    }
   };
 
   return (

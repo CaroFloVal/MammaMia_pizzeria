@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
+import { UserContext } from '../context/UserContext';  
 
 const RegisterPage = () => {
   const [email, setEmail] = useState('');
@@ -6,26 +7,34 @@ const RegisterPage = () => {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [message, setMessage] = useState('');
 
-  const handleSubmit = (e) => {
+  const { register } = useContext(UserContext);  
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
+   
     if (!email || !password || !confirmPassword) {
       setMessage('Todos los campos son obligatorios');
       return;
     }
 
     if (password.length < 6) {
-      setMessage('El password debe tener al menos 6 caracteres');
+      setMessage('La contraseña debe tener al menos 6 carácteres');
       return;
     }
 
     if (password !== confirmPassword) {
-      setMessage('El password y la confirmación del password deben ser iguales');
+      setMessage('Las contraseñas deben ser iguales');
       return;
     }
 
-    // Si todas las validaciones pasan
-    setMessage('¡Registro exitoso!');
+  
+    try {
+      await register(email, password);
+      setMessage('¡Registro exitoso!');
+    } catch (error) {
+      setMessage('Error al registrar. Intenta nuevamente.');
+    }
   };
 
   return (
